@@ -1,0 +1,1065 @@
+:root {
+            --navy: #07162f;
+            --navy2: #10264a;
+            --blue: #1677ff;
+            --pale: #edf5ff;
+            --text: #172b4d;
+            --muted: #62728c;
+            --line: #e2eaf5;
+            --shadow: 0 18px 55px rgba(7, 22, 47, 0.09);
+            --radius: 22px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background: #fff;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           NAVEGACIÓN
+        ======================================== */
+
+        .nav-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #ffffffed;
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid #e2eaf5cc;
+        }
+
+        .nav {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand { 
+            display: inline-flex;
+            align-items: center; 
+            gap: 10px; font-size: 1.28rem;
+            font-weight: 800; 
+            letter-spacing: -.8px;
+            white-space: nowrap;
+            color: var(--navy);
+        }
+        .brand .mx { 
+            color: var(--blue); 
+        }
+        .brand-mark { 
+            width: 42px; 
+            height: 42px; 
+            flex: 0 0 auto;
+        }
+
+        .globe {
+            font-size: 2.1rem;
+            color: var(--blue);
+        }
+
+        .nav-links { 
+            display: flex;
+            align-items: center; 
+            gap: 28px; font-size: .88rem;
+            font-weight: 500;
+            color: #41516b;
+        }
+
+        .nav-links a:hover,
+        footer a:hover {
+            color: var(--blue);
+        }
+
+        .nav-cta,
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 99px;
+            padding: 13px 19px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-cta,
+        .primary {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 9px 22px #1677ff33;
+            border: 0;
+        }
+
+        .btn:hover,
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 13px 28px #1677ff40;
+        }
+
+        .secondary {
+            background: #fff;
+            border: 1px solid #dce6f3;
+            color: var(--navy);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: var(--navy);
+        }
+
+        /* ========================================
+           PORTADA
+        ======================================== */
+
+        .hero {
+            padding: 82px 0 76px;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    ellipse at 85% 18%,
+                    #1677ff20,
+                    transparent 32%
+                ),
+                linear-gradient(#fff, #f7faff);
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            align-items: center;
+            gap: 45px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 13px;
+            background: #eaf3ff;
+            border: 1px solid #d7e8ff;
+            border-radius: 99px;
+            color: var(--blue);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .eyebrow i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--blue);
+            box-shadow: 0 0 0 4px #1677ff20;
+        }
+
+        h1 {
+            font-size: clamp(2.7rem, 5vw, 4.45rem);
+            line-height: 1.08;
+            letter-spacing: -2.5px;
+            color: var(--navy);
+            margin: 22px 0 18px;
+        }
+
+        h1 em,
+        h2 em {
+            font-style: normal;
+            color: var(--blue);
+        }
+
+        .lead {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--muted);
+            margin: 0 0 25px;
+            max-width: 580px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .note {
+            font-size: 0.76rem;
+            color: #71809a;
+            margin-top: 23px;
+        }
+
+        
+        /* ========================================
+        ILUSTRACIÓN DEL PORTA-TARJETERO NFC
+        ======================================== */
+
+        .hero-art {
+            position: relative;
+            min-width: 0;
+            min-height: 430px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            isolation: isolate;
+        }
+
+        /* Resplandor detrás del producto */
+
+        .product-glow {
+            position: absolute;
+            z-index: -1;
+            width: 85%;
+            aspect-ratio: 1;
+            max-width: 400px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                #1677ff20 0%,
+                #1677ff09 55%,
+                transparent 72%
+            );
+        }
+
+        .hero-product {
+            display: block;
+            position: relative;
+            max-width: 130%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 22px 28px #07162f18);
+        }
+
+        /*-----------------------------------------------------------*/
+
+        /* Etiquetas flotantes */
+
+.product-label {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    background: #ffffffed;
+    border: 1px solid #e2eaf5;
+    border-radius: 15px;
+    box-shadow: 0 14px 35px #07162f14;
+    color: var(--navy);
+}
+
+.label-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--pale);
+    color: var(--blue);
+    font-size: 1.4rem;
+}
+
+.product-label strong {
+    display: block;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.product-label small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.63rem;
+    white-space: nowrap;
+}
+
+.label-identidad {
+    top: 90px;
+    right: -105px;
+    transform: rotate(4deg);
+}
+
+.label-design {
+    bottom: 12px;
+    left: -12px;
+    transform: rotate(-2deg);
+}
+
+.label-nfc {
+    top: 175px;
+    left: -10px;
+    
+    
+}
+
+
+        /* Adaptación para móviles */
+        @media (max-width: 740px) {
+            .hero-art {
+                min-height: 300px;
+                margin: 0 auto;
+            }
+
+            .product-glow {
+                width: 260px;
+                height: 260px;
+            }
+
+            .hero-product {
+                width: 100%;
+                max-width: 500px;
+            }
+             .label-nfc {
+                top: 130px;
+                left: 55px;
+            }
+
+            .label-design {
+                bottom: 15px;
+                left: 60px;
+            }
+
+            .label-identidad {
+                top: 70px;
+                right: -40px;
+            }
+
+            .product-label {
+                padding: 10px 12px;
+            }
+        }
+
+
+
+        
+
+        /* ========================================
+           SECCIONES GENERALES
+        ======================================== */
+
+        .section {
+            padding: 86px 0;
+        }
+
+        .soft {
+            background: #f7faff;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .kicker {
+            color: var(--blue);
+            font-size: 0.73rem;
+            text-transform: uppercase;
+            letter-spacing: 1.7px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 2.9rem);
+            line-height: 1.2;
+            letter-spacing: -1.2px;
+            color: var(--navy);
+            margin: 12px 0 14px;
+        }
+
+        .muted,
+        .two-col p,
+        .heading p,
+        .use-grid p {
+            color: var(--muted);
+            line-height: 1.85;
+        }
+
+        .two-col p + p {
+            margin-top: 12px;
+        }
+
+        .heading {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 42px;
+        }
+
+        .heading p {
+            margin: 0;
+        }
+
+        /* ========================================
+           CÓMO FUNCIONA
+        ======================================== */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .steps article {
+            position: relative;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 27px;
+        }
+
+        .num {
+            position: absolute;
+            right: 22px;
+            top: 18px;
+            color: #a5b8d2;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .icon {
+            width: 53px;
+            height: 53px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: var(--pale);
+            color: var(--blue);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+
+
+        .fine {
+            text-align: center;
+            color: #78879e;
+            font-size: 0.72rem;
+            line-height: 1.7;
+            max-width: 850px;
+            margin: 24px auto 0;
+        }
+
+        /* ========================================
+           SOLUCIONES Y TARJETAS
+        ======================================== */
+
+        .products {
+            display: grid;
+            gap: 22px;
+        }
+
+        .product-row {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 34px;
+            align-items: center;
+            padding: 28px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .product-row:hover {
+            transform: translateY(-4px);
+            border-color: #c4dcff;
+            box-shadow: var(--shadow);
+        }
+
+        .product-featured {
+            border-color: #c4dcff;
+            box-shadow: var(--shadow);
+        }
+
+        .product-media {
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, #f0f6ff, #fbfdff);
+        }
+
+        .product-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .product-tag {
+            color: var(--blue);
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .product-info h3 {
+            margin: 8px 0;
+            color: var(--navy);
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+
+        .product-info p {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.8;
+        }
+
+        .product-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 18px;
+            margin: 0 0 20px;
+            padding: 0;
+            list-style: none;
+            font-size: 0.75rem;
+            color: #41516b;
+        }
+
+        .product-features li::before {
+            content: "✓ ";
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .product-buy {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--navy);
+        }
+
+        .price small {
+            margin-left: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            color: var(--muted);
+        }
+
+        /* ========================================
+           BENEFICIOS
+        ======================================== */
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .benefits article {
+            text-align: center;
+            padding: 23px 15px;
+        }
+
+        .benefits .icon {
+            margin: 0 auto 15px;
+            background: white;
+            border: 1px solid var(--line);
+            width: 57px;
+            height: 57px;
+        }
+
+        .benefits p {
+            font-size: 0.78rem;
+        }
+
+        /* ========================================
+           TIPOS DE NEGOCIO
+        ======================================== */
+
+        .use-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 55px;
+            align-items: center;
+        }
+
+        .use-grid .btn {
+            margin-top: 14px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 11px;
+        }
+
+        .tags span {
+            padding: 11px 16px;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            background: #fff;
+            color: #405675;
+            font-size: 0.8rem;
+            box-shadow: 0 5px 18px #07162f09;
+        }
+
+        /* ========================================
+           PREGUNTAS FRECUENTES
+        ======================================== */
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 0.75fr 1.25fr;
+            gap: 65px;
+            align-items: start;
+        }
+
+        .faqs details {
+            border-bottom: 1px solid #dce6f3;
+            padding: 18px 0;
+        }
+
+        .faqs details:first-child {
+            padding-top: 0;
+        }
+
+        .faqs summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .faqs summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faqs summary:after {
+            content: "+";
+            color: var(--blue);
+            font-size: 1.3rem;
+        }
+
+        .faqs details[open] summary:after {
+            content: "−";
+        }
+
+        .faqs details p {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.8;
+            margin: 12px 25px 0 0;
+        }
+
+        /* ========================================
+           CONTACTO
+        ======================================== */
+
+        .contact-panel {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, #07162f, #12376b);
+            border-radius: 30px;
+            padding: 46px;
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 42px;
+            align-items: center;
+            color: white;
+        }
+
+        .contact-panel:after {
+            content: "";
+            position: absolute;
+            right: -110px;
+            top: -180px;
+            width: 360px;
+            height: 360px;
+            border: 1px solid #ffffff22;
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 35px #ffffff08,
+                0 0 0 75px #ffffff05;
+            pointer-events: none;
+        }
+
+        .contact-panel .kicker {
+            color: #75b4ff;
+        }
+
+        .contact-panel h2 {
+            color: white;
+            font-size: clamp(2rem, 3.5vw, 2.7rem);
+        }
+
+        .contact-panel p {
+            color: #c3d2e9;
+            line-height: 1.85;
+        }
+
+        .contact-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 23px;
+        }
+
+        .contact-points span {
+            font-size: 0.7rem;
+            color: #d7e8ff;
+            border: 1px solid #ffffff2e;
+            padding: 8px 10px;
+            border-radius: 99px;
+        }
+
+        .contact-panel form {
+            position: relative;
+            z-index: 1;
+            padding: 22px;
+            background: #ffffff12;
+            border: 1px solid #ffffff24;
+            border-radius: 19px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .contact-panel label {
+            font-size: 0.72rem;
+            color: #e2edff;
+            margin-top: 4px;
+        }
+
+        .contact-panel input,
+        .contact-panel select,
+        .contact-panel textarea {
+            width: 100%;
+            border: 1px solid #ffffff33;
+            border-radius: 10px;
+            background: #fffffff7;
+            padding: 11px;
+            color: var(--navy);
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .contact-panel textarea {
+            resize: vertical;
+        }
+
+        .submit {
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.77rem;
+        }
+
+        .form-note {
+            font-size: 0.65rem !important;
+            line-height: 1.6 !important;
+            color: #b8cce7 !important;
+            margin: 2px 0 0 !important;
+        }
+
+        /* ========================================
+           PIE DE PÁGINA
+        ======================================== */
+
+        footer {
+            padding: 27px 0 17px;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            color: var(--muted);
+            font-size: .78rem;
+        }
+
+        .footer-inner p {
+            margin: 0;
+        }
+
+        .footer-inner .brand{
+            font-size: 1rem;
+        }
+
+
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 19px;
+            padding-top: 15px;
+            border-top: 1px solid var(--line);
+            font-size: 0.67rem;
+            color: #8a98ad;
+        }
+
+        /* ========================================
+           DISEÑO RESPONSIVO: TABLET
+        ======================================== */
+
+        @media (max-width: 950px) {
+            .nav-links {
+                gap: 12px;
+                font-size: 0.75rem;
+            }
+
+            .nav-cta {
+                font-size: 0.76rem;
+                padding: 11px 13px;
+            }
+
+            .hero-grid {
+                gap: 25px;
+            }
+
+            .benefits {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-panel {
+                padding: 32px;
+                gap: 25px;
+            }
+
+            .faq-grid {
+                gap: 38px;
+            }
+        }
+
+        /* ========================================
+           DISEÑO RESPONSIVO: CELULARES
+        ======================================== */
+
+        @media (max-width: 740px) {
+            .container {
+                width: min(100% - 30px, 560px);
+            }
+
+            .nav {
+                min-height: 70px;
+            }
+
+            .brand {
+                font-size: 1.05rem;
+            }
+
+            .globe {
+                font-size: 1.8rem;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-cta {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 67px;
+                left: 15px;
+                right: 15px;
+                padding: 13px;
+                background: white;
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                box-shadow: var(--shadow);
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px 8px;
+            }
+
+            .hero {
+                padding: 53px 0 40px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            h1 {
+                font-size: clamp(2.55rem, 12vw, 3.6rem);
+                letter-spacing: -1.8px;
+            }
+
+            .lead {
+                font-size: 0.93rem;
+            }
+
+            .hero-art {
+                min-height: 330px;
+                transform: scale(0.9);
+                margin: -3px -12px 0;
+            }
+
+            .orb {
+                width: 270px;
+                height: 270px;
+            }
+
+            .nfc-card {
+                max-width: 330px;
+            }
+
+            .tag-one {
+                left: 0;
+                bottom: 20px;
+            }
+
+            .tag-two {
+                right: 0;
+                top: 17px;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+
+            .two-col,
+            .use-grid,
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .heading {
+                margin-bottom: 30px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .product-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .product-media {
+                max-width: 220px;
+                margin: 0 auto;
+            }
+
+            .product-info h3 {
+                font-size: 1.2rem;
+            }
+
+            .benefits {
+                gap: 3px;
+            }
+
+            .benefits article {
+                padding: 17px 7px;
+            }
+
+            .tags {
+                gap: 8px;
+            }
+
+            .tags span {
+                font-size: 0.73rem;
+                padding: 9px 12px;
+            }
+
+            .contact-panel {
+                grid-template-columns: 1fr;
+                padding: 27px 19px;
+                border-radius: 24px;
+                gap: 24px;
+            }
+
+            .contact-panel form {
+                padding: 17px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+
+
+
+
+/* Tipografía editorial coherente con la identidad de CodePOS MX. */
+:root { --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --font-data: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; --blue: #176be8; }
+body, button, input, select, textarea { font-family: var(--font-body); }
+h1, h2, h3, h4, .brand, .nav-cta, .btn { font-family: var(--font-display); }
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -.05em; }
+h1 { line-height: 1.06; }
+.hero h1 { font-size: clamp(3rem, 6vw, 5rem); letter-spacing: -.06em; }
+.hero p, .section-heading p { color: #5d6d84; line-height: 1.75; }
+.section-kicker { font-size: .69rem; letter-spacing: .15em; }
+.service-card, .product-card, .contact-panel { border-radius: 18px; }
+.nav-links { font-family: var(--font-body); }
+.btn, .nav-cta { font-weight: 700; letter-spacing: -.015em; }
+@media (max-width: 700px) {
+  .hero h1 { font-size: clamp(2.65rem, 11vw, 3.75rem); }
+}
+
+        

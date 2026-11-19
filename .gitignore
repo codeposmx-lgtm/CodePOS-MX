@@ -1,0 +1,14 @@
+# Dependencias y compilados (se regeneran con npm install / npm run build)
+node_modules/
+dist/
+private-dashboard-build/
+desktop/node_modules/
+desktop/dist/
+
+# Nunca versionar credenciales
+*.p12
+*.pem
+.env
+.env.*
+.vercel
+client_secret*.json

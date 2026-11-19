@@ -1,0 +1,9 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './scrollOnReload.js';
+import App from './App.jsx';
+import './styles.css';
+import './demo.css';
+import './motion.css';
+
+createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

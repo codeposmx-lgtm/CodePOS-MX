@@ -1,0 +1,8 @@
+private-dashboard/
+src/AnalyticsDashboard.jsx
+src/analytics-main.jsx
+src/analytics.css
+PANEL-PRIVADO.md
+vite.dashboard.config.js
+private-dashboard-build/
+desktop/

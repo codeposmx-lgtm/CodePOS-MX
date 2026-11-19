@@ -1,0 +1,48 @@
+CÓMO SE VINCULÓ ESTA CARPETA CON GIT
+
+1. Git local: se ejecutó "git init" dentro de la carpeta. Eso creó la carpeta oculta .git, que es donde se guarda todo el historial. El primer commit es del 29/10/2026 ("Initial commit: estado actual del proyecto").
+
+2. Repositorio en GitHub: se vinculó con un "remote" llamado origin que apunta a:
+https://github.com/altamirano-code/COMALBA.git
+
+
+PARA HACERLO EN OTRA CARPETA
+
+PASO 1. Crear el repositorio local
+Abre una terminal dentro de la carpeta nueva y ejecuta:
+
+cd "C:\ruta\a\tu\otra-carpeta"
+git init
+git add .
+git commit -m "Initial commit"
+
+Antes del "git add .", si es un proyecto de Node o Next, crea un archivo llamado .gitignore con al menos estas líneas para no subir archivos pesados ni secretos:
+
+node_modules/
+.next/
+.env*
+
+PASO 2. Crear un repositorio vacío en GitHub
+Entra a https://github.com/new, ponle nombre y NO marques "Add README", porque si GitHub crea un archivo propio la primera subida choca con tu historial.
+
+PASO 3. Vincularlo y subirlo
+
+git remote add origin https://github.com/TU_USUARIO/NOMBRE_REPO.git
+git branch -M master
+git push -u origin master
+
+Si prefieres que la rama se llame main, cambia master por main en las dos líneas.
+
+
+PARA GUARDAR CAMBIOS DESPUÉS
+
+git add .
+git commit -m "Descripción del cambio"
+git push
+
+
+SI EL REPOSITORIO YA EXISTE EN GITHUB
+
+Si solo lo quieres en otra carpeta o en otra computadora, no hace falta git init. Basta con clonarlo:
+
+git clone https://github.com/altamirano-code/COMALBA.git

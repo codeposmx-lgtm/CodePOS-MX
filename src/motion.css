@@ -1,0 +1,48 @@
+/* Motion language: restrained entrance, tactile controls, and a little glass drift. */
+.reveal-on-scroll {
+  opacity: 0;
+  translate: 0 9px;
+  transition: opacity .38s cubic-bezier(.2,.65,.3,1), translate .38s cubic-bezier(.2,.65,.3,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-on-scroll.is-visible { opacity: 1; translate: 0 0; }
+.hero-art .orb { animation: orbBreath 9s ease-in-out infinite; transform-origin: center; }
+.hero-art .art-card { animation: artSettle .8s .08s cubic-bezier(.18,.7,.28,1) both; }
+.hero-art .floating-tag { animation: glassDrift 7s ease-in-out infinite; }
+.hero-art .tag-two { animation-delay: -2.7s; }
+.service-image img { transition: transform .45s cubic-bezier(.2,.65,.3,1), filter .45s ease; }
+.service-card:hover .service-image img { transform: scale(1.045); filter: saturate(1.06); }
+.story-symbol { transition: transform .35s cubic-bezier(.2,.65,.3,1), background .35s ease, box-shadow .35s ease; }
+.story-visual:hover .story-symbol { transform: translateY(-4px) rotate(-3deg); background: rgba(255,255,255,.13); box-shadow: 0 25px 58px rgba(0,0,0,.2); }
+.btn > span, .nav-cta > span { display: inline-block; transition: transform .2s ease; }
+.btn:hover > span, .nav-cta:hover > span { transform: translateX(3px); }
+.cart-row { animation: cartRowIn .26s cubic-bezier(.2,.65,.3,1) both; }
+.pos-success-message { animation: statusIn .24s ease both; }
+.pos-demo-chip > span:first-child { animation: statusPulse 2.6s ease-in-out infinite; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid rgba(23,107,232,.35);
+  outline-offset: 3px;
+}
+@keyframes orbBreath { 0%,100% { scale: 1; } 50% { scale: 1.035; } }
+@keyframes artSettle { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+@keyframes glassDrift { 0%,100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@keyframes cartRowIn { from { opacity: 0; translate: 0 5px; } to { opacity: 1; translate: 0 0; } }
+@keyframes statusIn { from { opacity: 0; translate: 0 4px; } to { opacity: 1; translate: 0 0; } }
+@keyframes statusPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(36,180,126,.13); } 50% { box-shadow: 0 0 0 5px rgba(36,180,126,.06); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll { opacity: 1; translate: none; transition: none; }
+  .hero-art .orb, .hero-art .art-card, .hero-art .floating-tag, .cart-row, .pos-success-message, .pos-demo-chip > span:first-child { animation: none; }
+  .service-image img, .story-symbol, .btn > span, .nav-cta > span { transition: none; }
+}
+
+@media (max-width: 700px) {
+  .hero-art .orb, .hero-art .floating-tag, .pos-demo-chip > span:first-child { animation: none; }
+  .reveal-on-scroll { transition-duration: .3s; }
+  .nav-wrap, .art-card, .floating-tag, .cookie-notice, .pos-app-topbar, .pos-demo-chip, .pos-business-switch {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .nav-wrap, .art-card, .pos-app-topbar { background-color: rgba(255,255,255,.96); }
+  .floating-tag, .cookie-notice, .pos-demo-chip, .pos-business-switch { background-color: rgba(255,255,255,.94); }
+}

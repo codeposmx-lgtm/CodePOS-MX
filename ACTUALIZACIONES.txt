@@ -1,0 +1,14 @@
+Servicios:
+
+
+Productos NFC:
+1: todos los links, pagina web(si tiene o se elabora), instagram, face, reseña en google
+2: menu digital del local o restaurante
+3: unicamente reseñas	
+
+Agregar en un futuro:
+formulario con selector de correo o whatsapp, en cada una de las paginas de los servicios asi como NFC, el usuario
+deberá seleccionar si whatsap o correo, y únicamente rellenar el formulario, ya sea que se envie un mensaje en automatico, o
+un correo con una estructura predeterminada rellenada a base de su información.
+
+Agregar el - 2 + , dentro de los NFC
