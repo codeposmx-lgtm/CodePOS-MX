@@ -29,6 +29,10 @@ App local para Windows (**CodePOS MX Dashboard**). No forma parte del sitio púb
   - `lib/store.js`: secretos cifrados con el cifrado de Windows (DPAPI, ligado a tu usuario de Windows) en
     `%APPDATA%\CodePOS MX Dashboard\secrets.json`. Los ajustes no secretos (página de Facebook elegida, ID de propiedad GA4)
     van en `settings.json`. Si el cifrado no está disponible, no se guarda nada.
+  - `lib/manual.js`: **capturas manuales** de métricas (las que escribes o importas desde CSV en el panel). Se validan
+    (canal, fechas, enteros de 0 a 1,000,000,000, máximo 1,000 capturas) y se guardan en
+    `%APPDATA%\CodePOS MX Dashboard\manual-metrics.json`. No se cifran porque no son secretos, y nunca salen de la PC.
+    La «Plantilla CSV» se descarga siempre con el diálogo «Guardar como».
   - `lib/prompt.js` y `prompt/`: ventana propia para escribir credenciales. Lo que escribes va a la capa nativa, nunca al panel.
   - `lib/meta.js` y `lib/meta-login.js`: Facebook Login para escritorio (redirección a `login_success.html` en una ventana
     aislada, sin cookies persistentes y con verificación de `state`). Los tokens van en la cabecera `Authorization`, nunca en la URL.
@@ -96,7 +100,8 @@ Métricas consultadas (vigentes tras la retirada de `page_impressions*` en nov. 
 ## Estado de verificación (2026-11-18)
 
 - **Verificado en Windows:**
-  - 65 pruebas automáticas (`npm --prefix desktop test`).
+  - 82 pruebas automáticas (`npm --prefix desktop test`).
+  - Capturas manuales: se guardan, se leen al reiniciar, se rechazan las inválidas y la plantilla CSV abre «Guardar como».
   - El sitio público compila igual que antes (mismos 37 archivos en `dist/`, sin rastro del panel).
   - La app arranca y el panel carga.
   - El puente responde y rechaza acciones desconocidas.

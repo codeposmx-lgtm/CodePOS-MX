@@ -1,6 +1,18 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { isAuthorizedSender, createHandler, isAllowedExternal } = require('../lib/bridge');
+const { isAuthorizedSender, createHandler, isAllowedExternal, downloadPolicy } = require('../lib/bridge');
+
+test('downloadPolicy: only panel-generated CSV blobs, saved with a Save dialog', () => {
+  const ok = downloadPolicy('blob:file:///2b1c-uuid', 'plantilla-metricas-codepos.csv', 'C:\\Users\\X\\Downloads');
+  assert.deepEqual(ok, {
+    allow: true,
+    dialog: { title: 'Guardar plantilla CSV', defaultPath: 'C:\\Users\\X\\Downloads\\plantilla-metricas-codepos.csv', filters: [{ name: 'CSV', extensions: ['csv'] }] },
+  });
+  assert.equal(downloadPolicy('https://evil.com/x.csv', 'x.csv', 'C:\\D').allow, false);
+  assert.equal(downloadPolicy('blob:file:///id', 'virus.exe', 'C:\\D').allow, false);
+  assert.equal(downloadPolicy('blob:file:///id', '..\\..\\x.csv', 'C:\\D').dialog.defaultPath, 'C:\\D\\x.csv');
+  assert.equal(downloadPolicy('data:text/csv,a', 'a.csv', 'C:\\D').allow, true);
+});
 
 const root = 'C:\\App\\resources\\Dashboard';
 
@@ -36,8 +48,21 @@ function handlerWith(log = []) {
     status: () => ({ g: 1 }), configure: async () => 'gc', connect: async () => 'gco', disconnect: async () => 'gd',
     fetch: async days => { log.push(['google.fetch', days]); return 'gf'; },
   };
-  return createHandler({ meta, google, openExternal: url => log.push(['open', url]), getWindow: () => 'WIN' });
+  const manual = {
+    load: () => { log.push(['manual.load']); return { entries: [] }; },
+    save: entries => { log.push(['manual.save', entries]); return { entries }; },
+  };
+  return createHandler({ meta, google, manual, openExternal: url => log.push(['open', url]), getWindow: () => 'WIN' });
 }
+
+test('manual.load and manual.save route to the manual store', async () => {
+  const log = [];
+  const handle = handlerWith(log);
+  assert.deepEqual(await handle('manual.load', {}), { entries: [] });
+  assert.deepEqual(await handle('manual.save', { entries: [{ x: 1 }] }), { entries: [{ x: 1 }] });
+  await handle('manual.save', {});
+  assert.deepEqual(log, [['manual.load'], ['manual.save', [{ x: 1 }]], ['manual.save', undefined]]);
+});
 
 test('status shape', async () => {
   assert.deepEqual(await handlerWith()('status', {}), { native: true, meta: { m: 1 }, google: { g: 1 } });

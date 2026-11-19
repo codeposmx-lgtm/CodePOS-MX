@@ -9,7 +9,8 @@ const { createPrompt } = require('./lib/prompt');
 const { createMetaService, META_APP_ID, GRAPH_VERSION, META_SCOPES } = require('./lib/meta');
 const { runMetaLogin } = require('./lib/meta-login');
 const { createGoogleService } = require('./lib/google');
-const { createHandler, isAuthorizedSender } = require('./lib/bridge');
+const { createHandler, isAuthorizedSender, downloadPolicy } = require('./lib/bridge');
+const { createManualStore } = require('./lib/manual');
 
 // El panel (HTML/JS local) no tiene acceso a red (CSP connect-src 'none').
 // Pide datos a esta capa nativa mediante window.codepos.call (preload.js).
@@ -84,7 +85,8 @@ function start() {
     openExternal: url => shell.openExternal(url),
     focus: () => { if (mainWindow && !mainWindow.isDestroyed()) { if (mainWindow.isMinimized()) mainWindow.restore(); mainWindow.show(); mainWindow.focus(); } },
   });
-  const handle = createHandler({ meta, google, openExternal: url => shell.openExternal(url), getWindow: () => mainWindow });
+  const manual = createManualStore({ dir: app.getPath('userData') });
+  const handle = createHandler({ meta, google, manual, openExternal: url => shell.openExternal(url), getWindow: () => mainWindow });
 
   // Puente JS ↔ nativo. Solo se aceptan mensajes del documento principal empaquetado.
   ipcMain.handle('codepos', async (event, body) => {
@@ -122,6 +124,11 @@ function start() {
   });
   contents.setWindowOpenHandler(() => ({ action: 'deny' }));
   contents.session.setPermissionRequestHandler((_wc, _permission, callback) => callback(false));
+  contents.session.on('will-download', (event, item) => {
+    const policy = downloadPolicy(item.getURL(), item.getFilename(), app.getPath('downloads'));
+    if (!policy.allow) { event.preventDefault(); return; }
+    item.setSaveDialogOptions(policy.dialog);
+  });
 
   mainWindow.loadURL(pathToFileURL(pageFile).toString());
 }

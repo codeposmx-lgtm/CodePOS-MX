@@ -31,7 +31,18 @@ function allowedExternalURL(link) {
 }
 const isAllowedExternal = link => allowedExternalURL(link) !== null;
 
-function createHandler({ meta, google, openExternal, getWindow }) {
+// Descargas: solo los CSV que genera el propio panel (blob:/data:), siempre con diálogo «Guardar como».
+function downloadPolicy(url, filename, downloadsDir) {
+  const name = path.win32.basename(String(filename || 'descarga.csv'));
+  const fromPanel = /^(blob|data):/i.test(String(url));
+  if (!fromPanel || !/\.csv$/i.test(name)) return { allow: false };
+  return {
+    allow: true,
+    dialog: { title: 'Guardar plantilla CSV', defaultPath: path.win32.join(downloadsDir, name), filters: [{ name: 'CSV', extensions: ['csv'] }] },
+  };
+}
+
+function createHandler({ meta, google, manual, openExternal, getWindow }) {
   return async function handle(action, body = {}) {
     const days = Number.isFinite(Number(body.days)) && body.days !== undefined && body.days !== null ? Math.trunc(Number(body.days)) : 30;
     switch (action) {
@@ -46,6 +57,8 @@ function createHandler({ meta, google, openExternal, getWindow }) {
       case 'google.connect': return google.connect();
       case 'google.disconnect': return google.disconnect();
       case 'google.fetch': return google.fetch(days);
+      case 'manual.load': return manual.load();
+      case 'manual.save': return manual.save(body.entries);
       case 'openExternal': {
         const href = allowedExternalURL(body.url);
         if (href) await openExternal(href);
@@ -57,4 +70,4 @@ function createHandler({ meta, google, openExternal, getWindow }) {
   };
 }
 
-module.exports = { isAuthorizedSender, isAllowedExternal, createHandler };
+module.exports = { isAuthorizedSender, isAllowedExternal, createHandler, downloadPolicy };
