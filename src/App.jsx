@@ -1,70 +1,16 @@
 import { useState } from 'react';
+import { Brand, Navbar } from './Navbar.jsx';
 import { businessTypes, demoAccounts, demoCatalogs, demoMetrics } from './data/demoData.js';
 import CookieNotice from './CookieNotice.jsx';
 import useRevealOnScroll from './useRevealOnScroll.js';
+
+export { Navbar };
 
 export const WHATSAPP_NUMBER = '5215574232439';
 const money = (value) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
 
 function BrandLogo() {
   return <><svg className="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="18" stroke="#07162f" strokeWidth="2.8"/><path d="M4.8 17h34.4M4.8 27h23.7M22 4c-5.8 5-8.7 11-8.7 18s2.9 13 8.7 18M22 4c5.8 5 8.7 11 8.7 18" stroke="#07162f" strokeWidth="2.2" strokeLinecap="round"/><path d="m24 24 8 6-8 6M35 23l-3 14" stroke="#1677ff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg><span>CodePOS <span className="mx">MX</span></span></>;
-}
-
-function Brand({ homeHref = "#inicio" }) {
-  return <a className="brand" href={homeHref} aria-label="CodePOS MX, inicio"><BrandLogo/></a>;
-}
-
-const navServices = [
-  { icon: '01', title: 'POS y ventas', detail: 'Ventas, inventario y cuentas', href: 'pos.html' },
-  { icon: '02', title: 'Tarjetas NFC y QR', detail: 'Comparte tu negocio con un toque', href: 'nfc.html' },
-  { icon: '03', title: 'Páginas web', detail: 'Tu negocio, presente en internet', href: '#servicio-paginas-web' },
-  { icon: '04', title: 'Menús digitales', detail: 'Consulta fácil desde un QR', href: '#servicio-menus-digitales-con-qr' },
-  { icon: '05', title: 'Sistemas a medida', detail: 'Herramientas para tu operación', href: '#servicio-sistemas-personalizados' },
-];
-
-export function Navbar({ homePath = "" }) {
-  const [open, setOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const sectionHref = (section) => `${homePath}#${section}`;
-  const close = () => { setOpen(false); setServicesOpen(false); };
-  const toggleServices = () => {
-    if (window.matchMedia('(min-width: 701px)').matches) setServicesOpen(true);
-    else setServicesOpen(value => !value);
-  };
-
-  return <div className="nav-wrap">
-    <div className="container">
-      <nav aria-label="Navegación principal">
-        <Brand homeHref={sectionHref('inicio')}/>
-        <div className={`nav-links${open ? ' open' : ''}`} id="navLinks">
-          <a href={sectionHref('inicio')} onClick={close}>Inicio</a>
-          <a href={sectionHref('historia')} onClick={close}>Nuestra historia</a>
-          <div className="nav-service-menu"
-            onPointerEnter={(event) => { if (event.pointerType === 'mouse' && window.matchMedia('(min-width: 701px)').matches) setServicesOpen(true); }}
-            onPointerLeave={(event) => { if (event.pointerType === 'mouse') setServicesOpen(false); }}
-            onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setServicesOpen(false); }}>
-            <button className="nav-service-trigger" type="button" aria-expanded={servicesOpen} aria-controls="navServiceDropdown" onClick={toggleServices}>
-              Servicios <span aria-hidden="true">⌄</span>
-            </button>
-            <div className={`nav-service-dropdown${servicesOpen ? ' open' : ''}`} id="navServiceDropdown">
-              <div className="nav-service-dropdown-heading"><span>CODEPOS MX · SOLUCIONES</span><strong>¿Qué quieres mejorar?</strong></div>
-              <div className="nav-service-grid">
-                {navServices.map(({ icon, title, detail, href }) => <a className="nav-service-item" key={title} href={`${homePath}${href}`} onClick={close}>
-                  <span className="nav-service-number">{icon}</span>
-                  <span><strong>{title}</strong><small>{detail}</small></span>
-                  <span className="nav-service-arrow" aria-hidden="true">↗</span>
-                </a>)}
-              </div>
-              <a className="nav-service-all" href={sectionHref('servicios')} onClick={close}>Ver todos los servicios <span aria-hidden="true">→</span></a>
-            </div>
-          </div>
-          <a href={sectionHref('contacto')} onClick={close}>Contacto</a>
-        </div>
-        <a className="nav-cta" href={sectionHref('contacto')}>Hablemos <span aria-hidden="true">↗</span></a>
-        <button className="menu-toggle" type="button" aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} onClick={() => setOpen(!open)}>{open ? '×' : '☰'}</button>
-      </nav>
-    </div>
-  </div>;
 }
 
 const heroSolutions = [

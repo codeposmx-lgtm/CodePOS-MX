@@ -1,0 +1,6 @@
+{
+  "files": ["index.html", "pos.html", "nfc.html", "legal.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

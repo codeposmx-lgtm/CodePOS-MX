@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-21T20:22:21.810Z",
+        "reason": "user confirmed: pidió Inter en dispositivos no Apple como sustituto parecido a San Francisco"
+      }
+    ]
+  }
+}

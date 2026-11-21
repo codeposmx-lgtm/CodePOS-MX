@@ -370,8 +370,8 @@ button, input, select, textarea { font: inherit; }
 @media (prefers-reduced-transparency: reduce) {
   .pos-app-topbar { background: #f4f8fe; }
 }
-.pos-demo, .pos-app-frame, .pos-app-topbar, .pos-panel, .pos-product, .pos-metric { font-family: var(--font-body, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); }
-.pos-app-topbar h2, .pos-panel h3, .pos-panel h4, .pos-panel-heading h4, .pos-total strong { font-family: var(--font-display, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); letter-spacing: -.035em; }
+.pos-demo, .pos-app-frame, .pos-app-topbar, .pos-panel, .pos-product, .pos-metric { font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif); }
+.pos-app-topbar h2, .pos-panel h3, .pos-panel h4, .pos-panel-heading h4, .pos-total strong { font-family: var(--font-display, -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif); letter-spacing: -.035em; }
 .pos-metric > div > strong, .pos-price, .cart-line-total, .cart-total strong, .pos-report-summary strong { font-family: var(--font-data, 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace); font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
 .pos-demo .section-heading { max-width: 780px; }
 .pos-demo .section-heading h2 { max-width: 720px; margin-inline: auto; }

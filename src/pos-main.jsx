@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './fonts.css';
 import './scrollOnReload.js';
 import PosPage from './PosPage.jsx';
 import './styles.css';

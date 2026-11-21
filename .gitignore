@@ -12,3 +12,11 @@ desktop/dist/
 .env.*
 .vercel
 client_secret*.json
+
+# Estado local de Impeccable (sesiones de live, cachés y datos del servidor)
+.impeccable/live/sessions/
+.impeccable/live/inject-journal.json
+.impeccable/live/server.json
+.impeccable/live/roots.json
+.impeccable/hook.cache.json
+.impeccable/config.local.json

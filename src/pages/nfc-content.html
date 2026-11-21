@@ -16,41 +16,9 @@
          ENCABEZADO Y MENÚ
     ======================================== -->
 
-    <header class="nav-wrap">
-        <nav class="container nav">
-
-            <a class="brand" href="index.html">
-                <svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                    <circle cx="22" cy="22" r="18" stroke="#07162f" stroke-width="2.8"/>
-                    <path d="M4.8 17h34.4M4.8 27h23.7M22 4c-5.8 5-8.7 11-8.7 18s2.9 13 8.7 18M22 4c5.8 5 8.7 11 8.7 18" stroke="#07162f" stroke-width="2.2" stroke-linecap="round"/>
-                    <path d="m24 24 8 6-8 6M35 23l-3 14" stroke="#1677ff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>CodePOS <span class="mx">MX</span></span>
-            </a>
-
-            <button
-                class="menu-toggle"
-                id="menuToggle"
-                aria-label="Abrir menú"
-                aria-expanded="false"
-                type="button"
-            >
-                ☰
-            </button>
-
-            <div class="nav-links" id="navLinks">
-                <a href="#como-funciona">Cómo funciona</a>
-                <a href="#soluciones">Soluciones</a>
-                <a href="#beneficios">Beneficios</a>
-                <a href="#preguntas">Preguntas frecuentes</a>
-            </div>
-
-            <a class="nav-cta" href="#contacto">
-                Cotizar mi tarjetero →
-            </a>
-
-        </nav>
-    </header>
+    <!-- La barra de navegación es la compartida (src/Navbar.jsx).
+         NfcPage.jsx la dibuja en el lugar de este marcador. -->
+    <header></header>
 
     <main>
 
@@ -269,7 +237,7 @@
 
                     <article class="product-row product-featured">
                         <div class="product-media">
-                            <img src="/ilustrativa-nfc.webp" alt="Tarjetero digital NFC y QR CodePOS MX" width="1100" height="733" loading="lazy" decoding="async">
+                            <img src="/ilustrativa-nfc_webp.webp" alt="Tarjetero digital NFC y QR CodePOS MX" width="1100" height="733" loading="lazy" decoding="async">
                         </div>
 
                         <div class="product-info">
@@ -585,13 +553,8 @@
     <footer>
         <div class="container footer-inner">
 
-            <a class="brand" href="#inicio">
-                <svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <circle cx="22" cy="22" r="18" stroke="#07162f" stroke-width="2.8"/>
-                <path d="M4.8 17h34.4M4.8 27h23.7M22 4c-5.8 5-8.7 11-8.7 18s2.9 13 8.7 18M22 4c5.8 5 8.7 11 8.7 18" stroke="#07162f" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="m24 24 8 6-8 6M35 23l-3 14" stroke="#1677ff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>CodePOS <span class="mx">MX</span></span>
+            <a class="brand" href="#inicio" aria-label="CodePOS MX, inicio">
+                <img class="brand-logo" src="/logo-code-nav.webp" alt="" width="562" height="120" decoding="async">
             </a>
 
             <p>Soluciones digitales para impulsar tu negocio.</p>
@@ -636,32 +599,6 @@
     ======================================== -->
 
     <script>
-        // ========================================
-        // MENÚ PARA DISPOSITIVOS MÓVILES
-        // ========================================
-
-        const toggle = document.getElementById("menuToggle");
-        const links = document.getElementById("navLinks");
-
-        if (toggle && links) {
-            toggle.addEventListener("click", () => {
-                const open = links.classList.toggle("open");
-
-                toggle.setAttribute("aria-expanded", String(open));
-                toggle.textContent = open ? "×" : "☰";
-            });
-
-            // Cierra el menú cuando se selecciona una sección.
-            links.querySelectorAll("a").forEach((a) => {
-                a.addEventListener("click", () => {
-                    links.classList.remove("open");
-
-                    toggle.setAttribute("aria-expanded", "false");
-                    toggle.textContent = "☰";
-                });
-            });
-        }
-
         // ========================================
         // AÑO AUTOMÁTICO DEL PIE DE PÁGINA
         // ========================================

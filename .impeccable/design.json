@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-21T12:00:00Z",
+  "title": "Design System: CodePOS MX",
+  "extensions": {
+    "colorMeta": {
+      "brand-blue": { "role": "primary", "displayName": "Azul CodePOS", "tonalRamp": ["#0a2a5c", "#0f3f8a", "#1456b8", "#176be8", "#4389ed", "#7aaaf2", "#b4cff8", "#e6f0fd"] },
+      "kicker-blue": { "role": "primary", "displayName": "Azul rótulo" },
+      "eyebrow-blue": { "role": "primary", "displayName": "Azul etiqueta" },
+      "navy-ink": { "role": "neutral", "displayName": "Tinta marina", "tonalRamp": ["#030a16", "#07162f", "#10264a", "#1d3a66", "#3a5680", "#6b80a0", "#a6b4c8", "#e3e8ef"] },
+      "navy-deep": { "role": "neutral", "displayName": "Marino profundo" },
+      "navy-panel": { "role": "neutral", "displayName": "Marino panel" },
+      "body-slate": { "role": "neutral", "displayName": "Pizarra" },
+      "muted-slate": { "role": "neutral", "displayName": "Pizarra suave" },
+      "copy-slate": { "role": "neutral", "displayName": "Pizarra del hero" },
+      "nav-slate": { "role": "neutral", "displayName": "Pizarra de navegación" },
+      "pale-blue": { "role": "neutral", "displayName": "Azul pálido" },
+      "soft-surface": { "role": "neutral", "displayName": "Superficie suave" },
+      "hairline": { "role": "neutral", "displayName": "Filete" },
+      "card-border": { "role": "neutral", "displayName": "Borde de tarjeta" },
+      "white": { "role": "neutral", "displayName": "Blanco" },
+      "success-green": { "role": "tertiary", "displayName": "Verde estado" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Solo el titular del hero." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos de sección." },
+      "title": { "displayName": "Title", "purpose": "Títulos de tarjetas." },
+      "body": { "displayName": "Body", "purpose": "Párrafos y texto de lectura." },
+      "label": { "displayName": "Label", "purpose": "Rótulos de sección en mayúsculas." },
+      "data": { "displayName": "Data", "purpose": "Números de índice del menú de servicios." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 2px 8px rgba(13,34,66,.025)", "purpose": "Tarjetas en reposo." },
+      { "name": "card-hover", "value": "0 16px 36px rgba(13,34,66,.075)", "purpose": "Tarjetas al pasar el mouse." },
+      { "name": "button-primary", "value": "0 9px 22px rgba(22,119,255,.2)", "purpose": "Halo bajo el botón primario." },
+      { "name": "glass-float", "value": "0 14px 38px rgba(7,22,47,.1), 0 1px 0 rgba(255,255,255,.98) inset", "purpose": "Capas de vidrio flotantes." }
+    ],
+    "motion": [
+      { "name": "ease-reveal", "value": "cubic-bezier(.2,.65,.3,1)", "purpose": "Entradas al hacer scroll y transiciones de imágenes." },
+      { "name": "duration-control", "value": "200ms", "purpose": "Hover de botones y enlaces." },
+      { "name": "duration-card", "value": "250ms", "purpose": "Elevación de tarjetas." },
+      { "name": "glass-drift", "value": "7s ease-in-out infinite", "purpose": "Deriva lenta de las etiquetas del hero." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "900px" },
+      { "name": "mobile", "value": "700px" },
+      { "name": "mobile-sm", "value": "600px" },
+      { "name": "mobile-xs", "value": "390px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal: píldora azul con halo.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Explora las soluciones <span>→</span></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 9px; padding: 13px 21px; border-radius: 999px; background: #176be8; color: #fff; font: 700 .84rem/1.2 -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; letter-spacing: -.015em; text-decoration: none; box-shadow: 0 9px 22px rgba(22,119,255,.2); transition: transform .2s ease, box-shadow .2s ease; } .ds-btn-primary span { display: inline-block; transition: transform .2s ease; } .ds-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 13px 28px rgba(22,119,255,.25); } .ds-btn-primary:hover span { transform: translateX(3px); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(23,107,232,.35); outline-offset: 3px; }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción secundaria: píldora blanca con borde.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">Conoce al equipo</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 9px; padding: 13px 21px; border-radius: 999px; background: #fff; color: #07162f; border: 1px solid #dce6f3; font: 700 .84rem/1.2 -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; letter-spacing: -.015em; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; } .ds-btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 13px 28px rgba(22,119,255,.25); } .ds-btn-secondary:focus-visible { outline: 3px solid rgba(23,107,232,.35); outline-offset: 3px; }"
+    },
+    {
+      "name": "Chip del hero",
+      "kind": "chip",
+      "refersTo": "chip-eyebrow",
+      "description": "Píldora informativa sobre el titular.",
+      "html": "<div class=\"ds-chip\"><span></span> Tecnología hecha para negocios reales</div>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 9px; padding: 8px 13px; border-radius: 999px; background: rgba(234,243,255,.76); border: 1px solid rgba(196,220,251,.82); color: #155cbd; font: 600 .72rem -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; letter-spacing: .045em; } .ds-chip span { width: 7px; height: 7px; border-radius: 50%; background: #176be8; box-shadow: 0 0 0 4px rgba(22,119,255,.12); }"
+    },
+    {
+      "name": "Tarjeta de servicio",
+      "kind": "card",
+      "refersTo": "card-service",
+      "description": "Tarjeta blanca que se eleva en hover.",
+      "html": "<article class=\"ds-card\"><h3>Sistemas de punto de venta (POS)</h3><p>Organiza ventas y operaciones con herramientas que simplifican tareas.</p><a href=\"#\">Quiero saber más →</a></article>",
+      "css": ".ds-card { max-width: 340px; padding: 25px; background: #fff; border: 1px solid #e4eaf2; border-radius: 18px; box-shadow: 0 2px 8px rgba(13,34,66,.025); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; } .ds-card:hover { transform: translateY(-3px); border-color: #c8d9ef; box-shadow: 0 16px 36px rgba(13,34,66,.075); } .ds-card h3 { margin: 0 0 10px; color: #07162f; font-size: 1.04rem; letter-spacing: -.035em; } .ds-card p { margin: 0; color: #65748a; font-size: .86rem; line-height: 1.7; } .ds-card a { display: inline-block; margin-top: 18px; color: #176be8; font-weight: 700; font-size: .84rem; text-decoration: none; }"
+    },
+    {
+      "name": "Barra de navegación de vidrio",
+      "kind": "nav",
+      "description": "Píldora translúcida con los enlaces principales.",
+      "html": "<nav class=\"ds-nav\"><strong>CodePOS <em>MX</em></strong><div><a href=\"#\">Inicio</a><a href=\"#\">Servicios</a><a href=\"#\">Contacto</a></div><a class=\"ds-nav-cta\" href=\"#\">Hablemos ↗</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 62px; padding: 0 18px; border-radius: 999px; background: linear-gradient(115deg, rgba(255,255,255,.76), rgba(238,246,255,.46) 48%, rgba(255,255,255,.64)); border: 1px solid rgba(255,255,255,.94); -webkit-backdrop-filter: blur(32px) saturate(190%); backdrop-filter: blur(32px) saturate(190%); box-shadow: 0 14px 38px rgba(7,22,47,.1), 0 1px 0 rgba(255,255,255,.98) inset; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; } .ds-nav strong { color: #07162f; font-weight: 800; letter-spacing: -.055em; } .ds-nav em { color: #176be8; font-style: normal; } .ds-nav div { display: flex; gap: 28px; } .ds-nav div a { color: #41516b; font-size: .84rem; font-weight: 500; text-decoration: none; } .ds-nav div a:hover { color: #176be8; } .ds-nav-cta { padding: 10px 18px; border-radius: 999px; background: #176be8; color: #fff; font-size: .84rem; font-weight: 700; text-decoration: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Mostrador de cristal",
+    "overview": "Un mostrador limpio donde todo lo que ofrece el negocio se ve a la primera. El sistema combina un azul marino profundo, que da peso y confianza, con un azul brillante que marca lo accionable, sobre superficies blancas y casi blancas con un leve tinte azul. Las piezas que flotan sobre el contenido (barra de navegación, tarjeta del hero, etiquetas flotantes, menú desplegable) son de vidrio translúcido: dejan ver lo que hay detrás, igual que el producto deja ver con claridad qué obtiene el cliente.\n\nLa densidad es cómoda y respirada: secciones amplias (104px), tarjetas con aire interior y texto de lectura a 1.7–1.95 de interlineado. Los componentes son amables y táctiles: esquinas redondeadas, botones en forma de píldora y una elevación ligera al pasar el mouse. El movimiento es contenido: entradas suaves al hacer scroll y una deriva lenta en las etiquetas del hero.",
+    "keyCharacteristics": [
+      "Marino profundo para títulos y paneles; azul brillante solo para acción y acento.",
+      "Vidrio translúcido (backdrop-filter con blur y saturación) reservado a capas flotantes.",
+      "Tipografía del sistema, pesada en títulos con tracking negativo marcado.",
+      "Esquinas generosas y botones píldora; nada de esquinas vivas.",
+      "Sombras azuladas y difusas, nunca negras."
+    ],
+    "rules": [
+      { "name": "La regla del único acento", "body": "El azul CodePOS marca lo que se puede hacer; no se usa como relleno decorativo de superficies grandes. Un segundo color de acento no forma parte del sistema.", "section": "colors" },
+      { "name": "La regla del azul en las sombras", "body": "Toda sombra se tiñe de marino (rgba(7,22,47,…) o rgba(13,34,66,…)) o de azul de marca; nunca negro puro.", "section": "colors" },
+      { "name": "La regla del tracking negativo", "body": "Cuanto más grande es el título, más juntas van las letras (de -0.03em en tarjetas a -0.065em en el hero). El cuerpo de texto nunca lleva tracking negativo.", "section": "typography" },
+      { "name": "La regla del vidrio solo para lo que flota", "body": "El efecto translúcido se reserva a capas que están sobre otro contenido (navegación, hero, desplegables). Las tarjetas de contenido son blancas y sólidas. Con prefers-reduced-transparency el vidrio se vuelve casi opaco.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar el azul CodePOS solo para acciones, enlaces y acentos pequeños.",
+      "Do teñir todas las sombras de marino o de azul de marca.",
+      "Do reservar el vidrio translúcido para capas flotantes y dar un respaldo opaco con prefers-reduced-transparency.",
+      "Do mantener las esquinas redondeadas: 18px en tarjetas y píldora en botones.",
+      "Do respetar prefers-reduced-motion: las animaciones de entrada y deriva se desactivan."
+    ],
+    "donts": [
+      "Don't introducir un segundo color de acento ni degradados morado-azul.",
+      "Don't usar sombras negras ni esquinas vivas en componentes.",
+      "Don't aplicar el efecto de vidrio a tarjetas de contenido o a bloques de texto largos.",
+      "Don't usar tracking negativo en texto de lectura."
+    ]
+  }
+}

@@ -16,4 +16,4 @@ Despliegue:
 - Netlify: importa el proyecto; `netlify.toml` configura el comando y directorio de salida.
 - Ambos servicios administran el certificado SSL/HTTPS del dominio. `vercel.json` y `netlify.toml` agregan encabezados básicos de seguridad.
 
-La portada, la página NFC (`/nfc.html`) y la página POS (`/pos.html`) son entradas independientes de React/Vite. Poppins se carga desde Google Fonts.
+La portada, la página NFC (`/nfc.html`) y la página POS (`/pos.html`) son entradas independientes de React/Vite. Tipografía: San Francisco en Mac/iPhone/iPad e Inter (incluida en src/fonts) en los demás dispositivos; ver src/fonts.css.

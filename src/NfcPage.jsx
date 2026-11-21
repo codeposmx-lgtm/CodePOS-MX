@@ -2,6 +2,7 @@ import { createElement, useEffect, useMemo } from 'react';
 import nfcDocument from './pages/nfc-content.html?raw';
 import useRevealOnScroll from './useRevealOnScroll.js';
 import CookieNotice from './CookieNotice.jsx';
+import { Navbar } from './Navbar.jsx';
 import '../nfc.css';
 
 const attributeNames = {
@@ -34,7 +35,6 @@ function renderNode(node, key) {
 }
 
 
-function NfcNavbar({ node }) { return renderNode(node, 'nfc-navbar'); }
 function NfcSection({ node, index }) { return renderNode(node, `nfc-section-${index}`); }
 function NfcMain({ node }) {
   return <main>{Array.from(node.childNodes).map((child, index) => (
@@ -45,6 +45,17 @@ function NfcMain({ node }) {
 }
 function NfcFooter({ node }) { return renderNode(node, 'nfc-footer'); }
 
+// Enlaces propios de la página NFC en la barra compartida. "contacto" no tiene
+// enlace (es el botón), pero se sigue para dejar de marcar al llegar a esa sección.
+const nfcLinks = [
+  { id: 'como-funciona', label: 'Cómo funciona' },
+  { id: 'soluciones', label: 'Soluciones' },
+  { id: 'beneficios', label: 'Beneficios' },
+  { id: 'preguntas', label: 'Preguntas frecuentes' },
+];
+const nfcSpySections = [...nfcLinks.map(link => link.id), 'contacto'];
+const nfcCta = { href: '#contacto', label: 'Cotizar mi tarjetero', icon: '→' };
+
 export default function NfcPage() {
   useRevealOnScroll();
   const bodyNodes = useMemo(() => {
@@ -53,20 +64,6 @@ export default function NfcPage() {
   }, []);
 
   useEffect(() => {
-    const toggle = document.getElementById('menuToggle');
-    const links = document.getElementById('navLinks');
-    const closeMenu = () => {
-      links?.classList.remove('open');
-      toggle?.setAttribute('aria-expanded', 'false');
-      if (toggle) toggle.textContent = '☰';
-    };
-    const openMenu = () => {
-      const isOpen = links?.classList.toggle('open') ?? false;
-      toggle?.setAttribute('aria-expanded', String(isOpen));
-      if (toggle) toggle.textContent = isOpen ? '×' : '☰';
-    };
-    toggle?.addEventListener('click', openMenu);
-    links?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
     const year = document.getElementById('year');
     if (year) year.textContent = String(new Date().getFullYear());
     const select = document.getElementById('interest');
@@ -89,8 +86,6 @@ export default function NfcPage() {
     };
     form?.addEventListener('submit', sendEmail);
     return () => {
-      toggle?.removeEventListener('click', openMenu);
-      links?.querySelectorAll('a').forEach((link) => link.removeEventListener('click', closeMenu));
       interestHandlers.forEach(([link, handler]) => link.removeEventListener('click', handler));
       form?.removeEventListener('submit', sendEmail);
     };
@@ -99,7 +94,7 @@ export default function NfcPage() {
   return <>{bodyNodes.map((node, index) => {
     if (node.nodeType !== Node.ELEMENT_NODE) return renderNode(node, `nfc-${index}`);
     const tag = node.tagName.toLowerCase();
-    if (tag === 'header') return <NfcNavbar key={`nfc-${index}`} node={node} />;
+    if (tag === 'header') return <Navbar key={`nfc-${index}`} homePath="/" links={nfcLinks} spySections={nfcSpySections} cta={nfcCta} menuFromTablet />;
     if (tag === 'main') return <NfcMain key={`nfc-${index}`} node={node} />;
     if (tag === 'footer') return <NfcFooter key={`nfc-${index}`} node={node} />;
     return renderNode(node, `nfc-${index}`);

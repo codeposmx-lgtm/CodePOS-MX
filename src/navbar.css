@@ -1,0 +1,559 @@
+    /* =========================================================
+       Barra de navegación compartida (src/Navbar.jsx)
+       La usan todas las páginas: portada, POS, Legal y NFC.
+       Las reglas van con prefijo ".nav-wrap" para que los estilos
+       propios de cada página no la modifiquen.
+       Necesita las variables --navy, --blue, --line, --shadow,
+       --font-body, --font-display y --font-data de cada página.
+       ========================================================= */
+
+    .nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(227, 239, 255, .24);
+        -webkit-backdrop-filter: blur(28px) saturate(185%);
+        backdrop-filter: blur(28px) saturate(185%);
+        border-bottom: 1px solid rgba(255, 255, 255, .36);
+        box-shadow: 0 8px 26px rgba(14, 40, 76, .055);
+    }
+
+    .nav-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(110deg, rgba(255, 255, 255, .82), rgba(255, 255, 255, .18) 48%, rgba(255, 255, 255, .62));
+    }
+
+    .nav-wrap > .container {
+        position: relative;
+        z-index: 1;
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding-block: 8px;
+    }
+
+    .nav-wrap nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 62px;
+        padding: 0 18px;
+        background: linear-gradient(115deg, rgba(255, 255, 255, .76), rgba(238, 246, 255, .46) 48%, rgba(255, 255, 255, .64));
+        border: 1px solid rgba(255, 255, 255, .94);
+        border-radius: 999px;
+        -webkit-backdrop-filter: blur(32px) saturate(190%);
+        backdrop-filter: blur(32px) saturate(190%);
+        box-shadow: 0 14px 38px rgba(7, 22, 47, .1), 0 1px 0 rgba(255, 255, 255, .98) inset, 0 0 0 1px rgba(188, 216, 250, .24);
+    }
+
+    .nav-wrap nav::before {
+        content: "";
+        position: absolute;
+        inset: 1px 12% auto;
+        height: 1px;
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .95), transparent);
+    }
+
+    .nav-wrap nav::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        background: linear-gradient(115deg, rgba(255, 255, 255, .38), transparent 38%, rgba(176, 211, 255, .16) 74%, rgba(255, 255, 255, .2));
+    }
+
+    .nav-wrap nav > * {
+        position: relative;
+        z-index: 1;
+    }
+
+
+    /* Logotipo (también lo usa el pie de página; cada página ajusta ahí su tamaño). */
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    .brand-logo {
+        display: block;
+        width: auto;
+        height: 36px;
+    }
+
+
+    /* Enlaces */
+    .nav-wrap .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        font-family: var(--font-body);
+        font-size: .84rem;
+        font-weight: 500;
+        color: #41516b;
+    }
+
+    .nav-wrap .nav-links a:hover {
+        color: var(--blue);
+    }
+
+    /* Indicador de la sección actual: una línea que crece bajo el enlace. */
+    .nav-wrap .nav-links > a,
+    .nav-service-trigger {
+        position: relative;
+    }
+
+    .nav-wrap .nav-links > a::after,
+    .nav-service-trigger::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -7px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--blue);
+        transform: scaleX(0);
+        transition: transform .32s cubic-bezier(.2, .65, .3, 1);
+    }
+
+    .nav-service-trigger::after {
+        bottom: 2px;
+    }
+
+    .nav-wrap .nav-links > a[aria-current="location"],
+    .nav-service-trigger[aria-current="location"] {
+        color: var(--navy);
+    }
+
+    .nav-wrap .nav-links > a[aria-current="location"]::after,
+    .nav-service-trigger[aria-current="location"]::after {
+        transform: scaleX(1);
+    }
+
+
+    /* Botón de la derecha y botón del menú móvil */
+    .nav-wrap .nav-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 13px 21px;
+        color: white;
+        background: var(--blue);
+        border: 0;
+        border-radius: 999px;
+        box-shadow: 0 9px 22px rgba(22, 119, 255, .2);
+        font-family: var(--font-display);
+        font-size: .84rem;
+        font-weight: 700;
+        letter-spacing: -.015em;
+        white-space: nowrap;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .nav-wrap .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 13px 28px rgba(22, 119, 255, .25);
+    }
+
+    .nav-wrap .menu-toggle {
+        display: none;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: white;
+        padding: 9px 12px;
+        color: var(--navy);
+        font-size: 1.25rem;
+    }
+
+
+    /* =========================================================
+       Menú desplegable de servicios: hover, teclado y apertura táctil
+       ========================================================= */
+
+    .nav-service-menu {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-service-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 0;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .nav-service-dropdown {
+        position: absolute;
+        z-index: 30;
+        top: calc(100% + 9px);
+        left: 50%;
+        width: min(548px, calc(100vw - 36px));
+        padding: 20px;
+        color: var(--navy);
+        background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(246, 250, 255, .9));
+        border: 1px solid rgba(255, 255, 255, .98);
+        border-radius: 19px;
+        box-shadow: 0 22px 58px rgba(7, 22, 47, .16), 0 2px 7px rgba(7, 22, 47, .04), inset 0 1px rgba(255, 255, 255, .98);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        backdrop-filter: blur(30px) saturate(180%);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translate(-50%, 8px);
+        transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    }
+
+    .nav-service-dropdown::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+    }
+
+    .nav-service-menu:hover .nav-service-dropdown,
+    .nav-service-menu:focus-within .nav-service-dropdown,
+    .nav-service-dropdown.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate(-50%, 0);
+    }
+
+    .nav-service-dropdown-heading {
+        display: grid;
+        gap: 5px;
+        padding: 1px 2px 15px;
+    }
+
+    .nav-service-dropdown-heading > span {
+        color: #3474c9;
+        font-size: .58rem;
+        font-weight: 750;
+        letter-spacing: .13em;
+    }
+
+    .nav-service-dropdown-heading > strong {
+        font-family: var(--font-display);
+        font-size: 1.02rem;
+        letter-spacing: -.035em;
+    }
+
+    .nav-service-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+    }
+
+    .nav-service-item {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding: 11px 9px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        transition: background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+
+    .nav-service-item:hover,
+    .nav-service-item:focus-visible {
+        background: rgba(235, 244, 255, .82);
+        border-color: #e2edfb;
+        transform: translateY(-1px);
+        outline: none;
+    }
+
+    .nav-service-number {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        color: #246dcc;
+        background: #edf5ff;
+        border: 1px solid rgba(209, 228, 251, .8);
+        border-radius: 10px;
+        font-family: var(--font-data);
+        font-size: .58rem;
+    }
+
+    .nav-service-item strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: -.025em;
+    }
+
+    .nav-service-item small {
+        display: block;
+        margin-top: 3px;
+        color: #728199;
+        font-size: .62rem;
+        line-height: 1.35;
+    }
+
+    .nav-service-all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 11px;
+        padding: 12px 4px 1px;
+        color: #2168c8;
+        border-top: 1px solid #e8eef6;
+        font-size: .72rem;
+        font-weight: 700;
+    }
+
+    .nav-service-all:hover {
+        color: #0b4eaa;
+    }
+
+
+    /* =========================================================
+       Tablets (hasta 900px)
+       ========================================================= */
+
+    @media (max-width: 900px) {
+        .nav-wrap .nav-links {
+            gap: 15px;
+        }
+    }
+
+
+    /* =========================================================
+       Celulares (hasta 700px)
+       ========================================================= */
+
+    @media (max-width: 700px) {
+        .nav-wrap > .container {
+            width: min(100% - 30px, 540px);
+            padding-block: 7px;
+        }
+
+        .nav-wrap nav {
+            padding: 0 10px;
+            border-radius: 19px;
+        }
+
+        .brand-logo {
+            height: 30px;
+        }
+
+        .nav-wrap .menu-toggle {
+            display: inline-block;
+        }
+
+        .nav-wrap .nav-cta {
+            display: none;
+        }
+
+        /* Panel desplegable del menú móvil. */
+        .nav-wrap nav > .nav-links {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            padding: 18px;
+            /* Blanco sólido: dentro de la barra de vidrio el desenfoque no
+               funciona y el texto de la página se transparentaba. */
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        .nav-wrap nav > .nav-links.open {
+            display: flex;
+        }
+
+        .nav-wrap .nav-links a {
+            padding: 12px 8px;
+        }
+
+        /* En el menú móvil la sección actual se subraya solo bajo el texto. */
+        .nav-wrap .nav-links > a::after,
+        .nav-service-trigger::after {
+            display: none;
+        }
+
+        .nav-wrap .nav-links > a[aria-current="location"],
+        .nav-service-trigger[aria-current="location"] {
+            color: var(--blue);
+            text-decoration: underline 2px;
+            text-underline-offset: 6px;
+        }
+
+        /* Menú de servicios dentro del menú móvil */
+        .nav-service-menu {
+            display: block;
+        }
+
+        .nav-service-trigger {
+            justify-content: space-between;
+            width: 100%;
+            padding: 12px 8px;
+            text-align: left;
+        }
+
+        .nav-service-dropdown,
+        .nav-service-menu:hover .nav-service-dropdown,
+        .nav-service-menu:focus-within .nav-service-dropdown {
+            display: none;
+            position: static;
+            width: auto;
+            margin: 0 0 7px;
+            padding: 0 5px;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: none;
+            transition: none;
+        }
+
+        .nav-service-menu:focus-within #navServiceDropdown,
+        #navServiceDropdown.open {
+            display: block;
+        }
+
+        .nav-service-dropdown::before {
+            display: none;
+        }
+
+        .nav-service-dropdown-heading {
+            padding: 7px 8px 9px;
+        }
+
+        .nav-service-dropdown-heading > strong {
+            font-size: .85rem;
+        }
+
+        .nav-service-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .nav-service-item {
+            grid-template-columns: 30px minmax(0, 1fr);
+            padding: 8px;
+        }
+
+        .nav-service-number {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-service-item strong {
+            font-size: .7rem;
+        }
+
+        .nav-service-item small {
+            font-size: .59rem;
+        }
+
+        .nav-service-all {
+            margin-top: 7px;
+            padding: 10px 8px 2px;
+        }
+    }
+
+
+    /* =========================================================
+       Menú desplegable desde tablet (opción menuFromTablet)
+       Para páginas con enlaces largos que no caben entre 701 y 900px.
+       Repite lo esencial del menú móvil; la barra conserva su forma de píldora.
+       ========================================================= */
+
+    @media (max-width: 900px) {
+        .nav-wrap--menu-tablet .menu-toggle {
+            display: inline-block;
+        }
+
+        .nav-wrap--menu-tablet .nav-cta {
+            display: none;
+        }
+
+        .nav-wrap--menu-tablet nav > .nav-links {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        .nav-wrap--menu-tablet nav > .nav-links.open {
+            display: flex;
+        }
+
+        .nav-wrap--menu-tablet .nav-links a {
+            padding: 12px 8px;
+        }
+
+        .nav-wrap--menu-tablet .nav-links > a::after {
+            display: none;
+        }
+
+        .nav-wrap--menu-tablet .nav-links > a[aria-current="location"] {
+            color: var(--blue);
+            text-decoration: underline 2px;
+            text-underline-offset: 6px;
+        }
+    }
+
+
+    /* =========================================================
+       Menos transparencia
+       ========================================================= */
+
+    @media (prefers-reduced-transparency: reduce) {
+        .nav-wrap {
+            background: rgba(245, 249, 255, .96);
+        }
+
+        .nav-wrap nav {
+            background: rgba(255, 255, 255, .97);
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+
+        .nav-service-dropdown {
+            background: #fff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+    }
