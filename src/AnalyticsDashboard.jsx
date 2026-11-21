@@ -171,6 +171,119 @@ function MetricForm({ entry, onSave, onClose }) {
   </div>;
 }
 
+// Convierte el reporte diario de GA4 en capturas del canal «Sitio web». Omite días sin actividad.
+export function gaReportToEntries(report) {
+  const byDate = new Map();
+  const fieldFor = { sessions: 'sessions', activeUsers: 'users', screenPageViews: 'pageViews' };
+  for (const [metric, field] of Object.entries(fieldFor)) {
+    for (const point of report?.series?.[metric] ?? []) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(point?.date ?? '')) continue;
+      const row = byDate.get(point.date) ?? { date: point.date, channel: 'website', sessions: null, users: null, pageViews: null };
+      row[field] = Math.max(0, Math.round(Number(point.value) || 0));
+      byDate.set(point.date, row);
+    }
+  }
+  return [...byDate.values()].filter(row => (row.sessions ?? 0) + (row.users ?? 0) + (row.pageViews ?? 0) > 0);
+}
+
+// Convierte el reporte de Meta en capturas. Facebook: cifras diarias. Instagram: alcance diario
+// y un reporte por periodo con los totales (views, interacciones, nuevos seguidores), para no sumar dos veces.
+export function metaReportToEntries(report, { today, periodStart }) {
+  const result = [];
+  const clean = value => (typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.round(value) : null);
+  const daily = (channel, mapping) => {
+    const byDate = new Map();
+    for (const [source, field] of Object.entries(mapping)) {
+      for (const point of report?.[channel]?.series?.[source] ?? []) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(point?.date ?? '') || point.date > today) continue;
+        const value = clean(point.value);
+        if (value === null) continue;
+        const row = byDate.get(point.date) ?? { date: point.date, channel };
+        row[field] = value;
+        byDate.set(point.date, row);
+      }
+    }
+    return byDate;
+  };
+  const hasMetric = row => Object.keys(row).some(key => !['date', 'channel', 'periodStart'].includes(key) && row[key] > 0);
+
+  if (report?.facebook) {
+    const rows = daily('facebook', { reachDaily: 'reach', views: 'views', engagements: 'interactions', newFollows: 'newFollowers' });
+    const followers = clean(report.facebook.followers);
+    if (followers !== null) rows.set(today, { ...(rows.get(today) ?? { date: today, channel: 'facebook' }), followers });
+    result.push(...[...rows.values()].filter(row => hasMetric(row) || row.followers !== undefined));
+  }
+  if (report?.instagram) {
+    const rows = daily('instagram', { reachDaily: 'reach' });
+    result.push(...[...rows.values()].filter(hasMetric));
+    const totals = report.instagram.totals ?? {};
+    const period = { date: today, periodStart, channel: 'instagram' };
+    for (const [source, field] of Object.entries({ views: 'views', interactions: 'interactions', newFollows: 'newFollowers' })) {
+      const value = clean(totals[source]);
+      if (value !== null) period[field] = value;
+    }
+    const followers = clean(report.instagram.followers);
+    if (followers !== null) period.followers = followers;
+    if (Object.keys(period).length > 3) result.push(period);
+  }
+  return result;
+}
+
+function MetaCard({ native, status, busy, report, lastImport, onAction, onImport, onSelectPage }) {
+  const meta = status?.meta ?? {};
+  const step = !native ? 'app' : meta.connected ? 'ready' : 'connect';
+  const pages = report?.pages ?? [];
+  const selectedPage = meta.selectedPageID ?? report?.facebook?.id ?? '';
+  return <article className="analytics-panel ga-card" aria-labelledby="meta-card-title">
+    <div className="panel-heading"><div><h2 id="meta-card-title">Meta · Facebook e Instagram</h2><p>Importa alcance, visualizaciones, interacciones y seguidores de tu página y tu cuenta profesional</p></div>
+      <span className={`connection-pill ${step === 'ready' ? 'manual-state' : ''}`}><i/>{step === 'ready' ? 'Conectado' : meta.expired ? 'Caducó' : 'Sin conectar'}</span></div>
+    <dl className="ga-status">
+      <div><dt>Sesión</dt><dd>{meta.connected ? (meta.longLived ? 'Larga duración' : 'Corta (1–2 h)') : meta.expired ? 'Caducada' : 'Pendiente'}</dd></div>
+      <div><dt>App Secret</dt><dd>{meta.hasAppSecret ? 'Guardado en Windows' : 'No guardado'}</dd></div>
+      <div><dt>Página</dt><dd>{report?.facebook?.name || (meta.selectedPageID ? 'Elegida' : 'Automática')}</dd></div>
+      {report?.instagram?.username && <div><dt>Instagram</dt><dd>@{report.instagram.username}</dd></div>}
+      {lastImport && <div><dt>Última importación</dt><dd>{lastImport}</dd></div>}
+    </dl>
+    {step === 'app' && <p className="ga-hint">Abre la app CodePOS MX Dashboard para Windows para conectar Meta.</p>}
+    {step === 'connect' && <p className="ga-hint">{meta.hasAppSecret ? 'Pulsa «Conectar con Meta», inicia sesión en la ventana de Facebook y elige la página CodePOS MX (y su Instagram).' : 'Recomendado: primero guarda el App Secret (Meta Developers › tu app › Configuración › Básica) para que la sesión dure ~60 días en lugar de 1–2 horas. Después pulsa «Conectar con Meta».'}</p>}
+    {step === 'ready' && <p className="ga-hint">Facebook se importa día por día. De Instagram se guarda el alcance diario y un reporte del periodo con visualizaciones, interacciones y nuevos seguidores. Algunas métricas de Instagram requieren 100+ seguidores.</p>}
+    <div className="ga-actions">
+      {!meta.hasAppSecret && <button type="button" className="analytics-button analytics-button-secondary" disabled={!native || busy} onClick={() => onAction('meta.setSecret')}>Guardar App Secret</button>}
+      {step !== 'ready' && <button type="button" className="analytics-button analytics-button-primary" disabled={!native || busy} onClick={() => onAction('meta.connect')}>Conectar con Meta</button>}
+      {step === 'ready' && <button type="button" className="analytics-button analytics-button-primary" disabled={busy} onClick={onImport}>Importar de Meta</button>}
+      {pages.length > 1 && <label className="meta-page-select">Página<select value={selectedPage} disabled={busy} onChange={event => onSelectPage(event.target.value)}>{pages.map(page => <option key={page.id} value={page.id}>{page.name || page.id}</option>)}</select></label>}
+      {meta.connected && <button type="button" className="analytics-button analytics-button-secondary ga-disconnect" disabled={busy} onClick={() => onAction('meta.disconnect')}>Desconectar</button>}
+    </div>
+    {report?.warnings?.length > 0 && <details className="meta-warnings"><summary>{report.warnings.length} aviso{report.warnings.length === 1 ? '' : 's'} de Meta</summary><ul>{report.warnings.map(warning => <li key={warning}>{warning}</li>)}</ul></details>}
+  </article>;
+}
+
+function GoogleAnalyticsCard({ native, status, busy, topPages, lastImport, onAction, onImport }) {
+  const google = status?.google ?? {};
+  const step = !native ? 'app' : !google.configured || !google.propertyID ? 'configure' : !google.connected ? 'connect' : 'ready';
+  return <article className="analytics-panel ga-card" aria-labelledby="ga-card-title">
+    <div className="panel-heading"><div><h2 id="ga-card-title">Google Analytics 4</h2><p>Importa sesiones, usuarios y páginas vistas de codeposmx.vercel.app</p></div>
+      <span className={`connection-pill ${step === 'ready' ? 'manual-state' : ''}`}><i/>{step === 'ready' ? 'Conectado' : 'Sin conectar'}</span></div>
+    <dl className="ga-status">
+      <div><dt>Credenciales</dt><dd>{google.configured ? 'Guardadas en Windows' : 'Pendientes'}</dd></div>
+      <div><dt>Propiedad</dt><dd>{google.propertyID ?? 'Pendiente'}</dd></div>
+      <div><dt>Autorización</dt><dd>{google.connected ? 'Solo lectura' : 'Pendiente'}</dd></div>
+      {lastImport && <div><dt>Última importación</dt><dd>{lastImport}</dd></div>}
+    </dl>
+    {step === 'app' && <p className="ga-hint">Abre la app CodePOS MX Dashboard para Windows para conectar Google Analytics.</p>}
+    {step === 'configure' && <p className="ga-hint">1. Pulsa «Configurar credenciales» y pega el ID de cliente OAuth (App de escritorio), su secreto y el ID numérico de la propiedad.</p>}
+    {step === 'connect' && <p className="ga-hint">2. Pulsa «Conectar con Google». Se abrirá tu navegador para autorizar el permiso de solo lectura.</p>}
+    {step === 'ready' && <p className="ga-hint">Importar reemplaza las cifras diarias del sitio web en esas fechas con las de Analytics. Los datos de hoy y ayer pueden seguir actualizándose.</p>}
+    <div className="ga-actions">
+      <button type="button" className="analytics-button analytics-button-secondary" disabled={!native || busy} onClick={() => onAction('google.configure')}>Configurar credenciales</button>
+      {step !== 'ready' && <button type="button" className="analytics-button analytics-button-primary" disabled={!native || busy || !google.configured} onClick={() => onAction('google.connect')}>Conectar con Google</button>}
+      {step === 'ready' && <button type="button" className="analytics-button analytics-button-primary" disabled={busy} onClick={onImport}>Importar de Analytics</button>}
+      {google.connected && <button type="button" className="analytics-button analytics-button-secondary ga-disconnect" disabled={busy} onClick={() => { if (window.confirm('¿Desconectar Google Analytics y revocar el acceso? Las cifras ya importadas se conservan.')) onAction('google.disconnect'); }}>Desconectar</button>}
+    </div>
+    {topPages?.length > 0 && <div className="ga-pages"><strong>Páginas más vistas</strong>{topPages.map(page => <div key={page.path}><span>{page.path}</span><b>{fmt(page.views)}</b></div>)}</div>}
+  </article>;
+}
+
 function StatSummary({ rows, metric }) {
   const values = rows.map(row => row[metric]).filter(Number.isFinite);
   return values.length ? values.reduce((total, value) => total + value, 0) : null;
@@ -232,6 +345,11 @@ export default function AnalyticsDashboard() {
   const [busy, setBusy] = useState(true);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
+  const [nativeStatus, setNativeStatus] = useState(null);
+  const [gaPages, setGaPages] = useState([]);
+  const [gaLastImport, setGaLastImport] = useState('');
+  const [metaReport, setMetaReport] = useState(null);
+  const [metaLastImport, setMetaLastImport] = useState('');
   const today = localToday();
 
   useEffect(() => {
@@ -241,6 +359,8 @@ export default function AnalyticsDashboard() {
         if (bridge()) {
           const result = await callNative('manual.load');
           if (mounted) { setEntries(normalizeEntries(result?.entries ?? [])); setNative(true); }
+          const current = await callNative('status').catch(() => null);
+          if (mounted) setNativeStatus(current);
         } else {
           const saved = JSON.parse(localStorage.getItem('codepos-manual-metrics-preview') ?? '[]');
           if (mounted) { setEntries(normalizeEntries(saved)); setNative(false); }
@@ -260,6 +380,85 @@ export default function AnalyticsDashboard() {
       setEntries(normalized); setModalOpen(false); setEditingEntry(null); setNotice('Captura guardada en esta PC.');
     } catch (saveError) { setError(`No se pudo guardar la captura: ${saveError.message}`); }
     finally { setBusy(false); }
+  };
+
+  const runGoogleAction = async action => {
+    setBusy(true); setError(''); setNotice('');
+    try {
+      const google = await callNative(action);
+      setNativeStatus(previous => ({ ...(previous ?? {}), google }));
+      if (action === 'google.connect') setNotice('Google Analytics conectado. Ya puedes importar tus cifras.');
+      if (action === 'google.disconnect') { setGaPages([]); setNotice('Google Analytics desconectado y acceso revocado.'); }
+    } catch (actionError) { setError(`Google Analytics: ${actionError.message}`); }
+    finally { setBusy(false); }
+  };
+
+  const runMetaAction = async action => {
+    setBusy(true); setError(''); setNotice('');
+    try {
+      const result = await callNative(action);
+      const { permissions, notes, ...meta } = result ?? {};
+      setNativeStatus(previous => ({ ...(previous ?? {}), meta }));
+      const messages = [...(Array.isArray(notes) ? notes : [])];
+      if (permissions?.missing?.length) messages.push(`Permisos no concedidos: ${permissions.missing.join(', ')}. Vuelve a conectar y acéptalos.`);
+      if (permissions?.unexpected?.length) messages.push(`Aviso: Meta concedió permisos extra (${permissions.unexpected.join(', ')}).`);
+      if (action === 'meta.connect' && meta.connected) messages.unshift('Meta conectado. Ya puedes importar tus cifras.');
+      if (action === 'meta.disconnect' && !meta.connected) { setMetaReport(null); messages.unshift('Meta desconectado.'); }
+      if (action === 'meta.setSecret' && meta.hasAppSecret) messages.unshift('App Secret guardado en el almacenamiento cifrado de Windows.');
+      if (messages.length) setNotice(messages.join(' '));
+    } catch (actionError) { setError(`Meta: ${actionError.message}`); }
+    finally { setBusy(false); }
+  };
+
+  const importFromMeta = async () => {
+    setBusy(true); setError(''); setNotice('');
+    let report;
+    try { report = await callNative('meta.fetch', { days: range.days }); }
+    catch (fetchError) {
+      setError(`Meta: ${fetchError.message}`); setBusy(false);
+      callNative('status').then(setNativeStatus).catch(() => {});
+      return;
+    }
+    setBusy(false);
+    setMetaReport(report);
+    setMetaLastImport(new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }));
+    const start = new Date(`${today}T12:00:00`); start.setDate(start.getDate() - (range.days - 1));
+    const periodStart = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')}`;
+    const imported = metaReportToEntries(report, { today, periodStart });
+    if (!imported.length) { setNotice('Meta no devolvió cifras para este periodo. Revisa los avisos de la tarjeta de Meta.'); return; }
+    const merged = new Map(entries.map(entry => [entryId(entry), entry]));
+    imported.forEach(entry => merged.set(entryId(entry), { ...merged.get(entryId(entry)), ...entry }));
+    await saveAll([...merged.values()]);
+    const fb = imported.filter(row => row.channel === 'facebook').length, ig = imported.filter(row => row.channel === 'instagram').length;
+    setNotice(`Se importaron de Meta ${fb} registro${fb === 1 ? '' : 's'} de Facebook y ${ig} de Instagram (${range.label}).${report?.warnings?.length ? ' Hay avisos en la tarjeta de Meta.' : ''}`);
+  };
+
+  const selectMetaPage = async pageID => {
+    setBusy(true); setError('');
+    try { const meta = await callNative('meta.selectPage', { pageID }); setNativeStatus(previous => ({ ...(previous ?? {}), meta })); }
+    catch (selectError) { setError(`Meta: ${selectError.message}`); setBusy(false); return; }
+    setBusy(false);
+    await importFromMeta();
+  };
+
+  const importFromGoogle = async () => {
+    setBusy(true); setError(''); setNotice('');
+    let report;
+    try { report = await callNative('google.fetch', { days: range.days }); }
+    catch (fetchError) {
+      setError(`Google Analytics: ${fetchError.message}`); setBusy(false);
+      callNative('status').then(setNativeStatus).catch(() => {});
+      return;
+    }
+    setBusy(false);
+    const imported = gaReportToEntries(report);
+    setGaPages(Array.isArray(report?.topPages) ? report.topPages : []);
+    setGaLastImport(new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }));
+    if (!imported.length) { setNotice(`Analytics no tiene visitas registradas en los últimos ${range.days} días. Si acabas de instalar la etiqueta, espera 24–48 horas.`); return; }
+    const merged = new Map(entries.map(entry => [entryId(entry), entry]));
+    imported.forEach(entry => merged.set(entryId(entry), { ...merged.get(entryId(entry)), ...entry }));
+    await saveAll([...merged.values()]);
+    setNotice(`Se importaron ${imported.length} día${imported.length === 1 ? '' : 's'} de Google Analytics (${range.label}).`);
   };
 
   const periodRows = useMemo(() => {
@@ -351,13 +550,15 @@ export default function AnalyticsDashboard() {
     <main className="analytics-main">
       <header className="analytics-topbar"><button className="analytics-mobile-menu" onClick={() => setMobileNavOpen(value => !value)} aria-label="Abrir navegación">☰</button><div className="topbar-breadcrumb"><span>CodePOS MX</span><span>/</span><strong>{title}</strong></div><div className="topbar-actions"><span className={`sync-status${entries.length ? ' is-live' : ''}`}><i/>{busy ? 'Guardando…' : entries.length ? 'Capturas guardadas' : 'Sin capturas'}</span><button type="button" className="analytics-button analytics-button-secondary refresh-button" onClick={() => { setEditingEntry(null); setModalOpen(true); }}>＋ Registrar</button></div></header>
       <div className="analytics-content">
-        <div className={`prototype-banner${entries.length ? ' manual-banner-active' : ''}`}><span className="prototype-icon">{entries.length ? '✓' : 'i'}</span><span><strong>{entries.length ? 'Métricas ingresadas manualmente' : 'Elige cómo registrar tus métricas'}</strong><small>{entries.length ? 'Las cifras son las que capturaste; no se han verificado automáticamente con las plataformas.' : 'Escribe las cifras de Instagram, Facebook y tu sitio, o impórtalas con nuestra plantilla CSV.'}</small></span><span className="prototype-badge">{entries.length ? `${entries.length} CAPTURAS` : 'LOCAL'}</span></div>
+        <div className={`prototype-banner${entries.length ? ' manual-banner-active' : ''}`}><span className="prototype-icon">{entries.length ? '✓' : 'i'}</span><span><strong>{entries.length ? 'Métricas guardadas en esta PC' : 'Elige cómo registrar tus métricas'}</strong><small>{entries.length ? 'Incluyen tus capturas manuales y lo que importes de Google Analytics y Meta.' : 'Conecta Google Analytics y Meta, escribe tus cifras o impórtalas con la plantilla CSV.'}</small></span><span className="prototype-badge">{entries.length ? `${entries.length} CAPTURAS` : 'LOCAL'}</span></div>
         {!native && <div className="manual-preview-note">Vista previa: abre la app privada para que tus capturas se guarden en esta PC.</div>}
         {error && <div className="manual-error-banner" role="alert">{error}</div>}
         {notice && <div className="manual-success-banner" role="status">{notice}</div>}
         <section className="analytics-heading"><div><span className="analytics-kicker">{todayLabel}</span><h1>{active ? active.name : 'Tus canales, en perspectiva.'}</h1><p>{active ? `Cifras que registraste para ${active.name} en los últimos ${range.days} días.` : 'Registra y compara las cifras de tu sitio y redes en un solo lugar.'}</p></div><button type="button" className="analytics-button analytics-button-primary" onClick={() => { setEditingEntry(null); setModalOpen(true); }}><span>＋</span> Capturar métricas</button></section>
         <div className="analytics-filter-row"><div className="source-pills" aria-label="Seleccionar canal"><button className={activeChannel === 'overview' ? 'active' : ''} onClick={() => setActiveChannel('overview')}>Todos los canales</button>{channels.map(channel => <button className={activeChannel === channel.key ? 'active' : ''} key={channel.key} onClick={() => setActiveChannel(channel.key)}><span className={`tiny-channel ${channel.theme}`}>{channel.icon}</span>{channel.name}</button>)}</div><div className="range-picker" aria-label="Seleccionar periodo">{ranges.map(option => <button type="button" key={option.days} className={range.days === option.days ? 'active' : ''} onClick={() => setRange(option)}>{option.label}</button>)}</div></div>
         <section className="analytics-stat-grid" aria-label="Indicadores">{stats.map(stat => <StatCard key={stat.label} {...stat}/>)}</section>
+        {(activeChannel === 'website' || activeChannel === 'overview') && <GoogleAnalyticsCard native={native} status={nativeStatus} busy={busy} topPages={gaPages} lastImport={gaLastImport} onAction={runGoogleAction} onImport={importFromGoogle}/>}
+        {activeChannel !== 'website' && <MetaCard native={native} status={nativeStatus} busy={busy} report={metaReport} lastImport={metaLastImport} onAction={runMetaAction} onImport={importFromMeta} onSelectPage={pageID => void selectMetaPage(pageID)}/>}
         <WeeklyGrowthAssistant entries={entries} activeChannel={activeChannel}/>
         <section className="analytics-main-grid">
           <article className="analytics-panel analytics-trend-panel"><div className="panel-heading"><div><h2>{chart.title}</h2><p>{chart.subtitle} · {range.label}</p></div></div><div className="trend-summary"><strong>{periodRows.length ? fmt(chartTotal) : '—'} <small>{chartSeries[0].name.toLowerCase()} · {range.label}</small></strong></div><TrendChart series={chartSeries}/><div className="chart-legend">{chartSeries.map(item => <span key={item.name}><i className="legend-dot" style={{ background: item.color }}/>{item.name}</span>)}</div></article>

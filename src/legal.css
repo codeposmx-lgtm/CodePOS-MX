@@ -33,6 +33,9 @@
   cursor: pointer;
 }
 .cookie-notice-button:hover, .legal-secondary-button:hover { background: #0c58c8; }
+.cookie-notice-actions { display: flex; flex: 0 0 auto; gap: 8px; }
+.cookie-notice-button-secondary { color: #176be8; background: #eef5ff; }
+.cookie-notice-button-secondary:hover { color: #fff; }
 
 .legal-main { min-height: 70vh; background: #f7f9fc; }
 .legal-hero { padding: 74px 0 48px; background: linear-gradient(145deg,#f6faff,#fff 68%); border-bottom: 1px solid #e7edf5; }
@@ -63,7 +66,7 @@
 
 @media (max-width: 700px) {
   .cookie-notice { right: 12px; bottom: 12px; flex-direction: column; align-items: stretch; gap: 12px; width: calc(100vw - 24px); padding: 16px; }
-  .cookie-notice-button { align-self: flex-end; }
+  .cookie-notice-button, .cookie-notice-actions { align-self: flex-end; }
   .legal-hero { padding: 54px 0 34px; }
   .legal-layout { grid-template-columns: 1fr; gap: 18px; padding-block: 24px 56px; }
   .legal-toc { position: static; grid-template-columns: 1fr; }

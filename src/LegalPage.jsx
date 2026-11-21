@@ -1,8 +1,9 @@
 import { Footer, Navbar, WHATSAPP_NUMBER } from './App.jsx';
 import CookieNotice from './CookieNotice.jsx';
+import { ANALYTICS_ENABLED } from './analytics.js';
 import './legal.css';
 
-const updated = '18 de noviembre de 2026';
+const updated = ANALYTICS_ENABLED ? '19 de noviembre de 2026' : '18 de noviembre de 2026';
 
 function LegalSection({ id, title, children }) {
   return <section className="legal-section" id={id}><h2>{title}</h2>{children}</section>;
@@ -36,7 +37,7 @@ export default function LegalPage() {
             <h3>Finalidades</h3>
             <p>Usamos los datos que nos envías para responder consultas, preparar cotizaciones, dar seguimiento a solicitudes y, cuando corresponda, atender una relación comercial. No vendemos tus datos ni los usamos para enviarte publicidad no solicitada.</p>
             <h3>Servicios externos y conservación</h3>
-            <p>Al enviar un correo o abrir WhatsApp, la información se procesa también mediante el proveedor que elijas; al salir del sitio se aplican sus propios términos y avisos. La plataforma de alojamiento (por ejemplo, Vercel o Netlify, según dónde se publique el sitio) puede procesar datos técnicos de conexión para entregar y proteger la página. Conservaremos las consultas durante el tiempo necesario para atenderlas y cumplir obligaciones legales; después se eliminarán o bloquearán cuando corresponda.</p>
+            <p>Al enviar un correo o abrir WhatsApp, la información se procesa también mediante el proveedor que elijas; al salir del sitio se aplican sus propios términos y avisos. La plataforma de alojamiento (por ejemplo, Vercel o Netlify, según dónde se publique el sitio) puede procesar datos técnicos de conexión para entregar y proteger la página. {ANALYTICS_ENABLED && ' Si aceptas las cookies de analítica, Google Analytics (Google LLC) recibe datos técnicos de tu visita, como páginas vistas, dispositivo, navegador y ubicación aproximada, para generar estadísticas agregadas; puede tratarlos en servidores fuera de México.'} Conservaremos las consultas durante el tiempo necesario para atenderlas y cumplir obligaciones legales; después se eliminarán o bloquearán cuando corresponda.</p>
             <h3>Derechos ARCO y cambios</h3>
             <p>Puedes solicitar acceso, rectificación, cancelación u oposición (derechos ARCO), así como limitar el uso o divulgación, escribiendo a <a href="mailto:codeposmx@gmail.com?subject=Solicitud%20de%20privacidad%20CodePOS%20MX">codeposmx@gmail.com</a> con el asunto “Solicitud de privacidad”. Indica tu nombre, el derecho que deseas ejercer y una forma de localizar los datos; podremos pedir información razonable para verificar tu identidad o representación. Conforme a la ley aplicable, comunicaremos la determinación dentro de veinte días y, si procede, la haremos efectiva dentro de los quince días siguientes, sujetos a los supuestos de ampliación previstos por la ley. Los cambios a este aviso se publicarán en esta página.</p>
             <p>En este aviso, “cancelación” y “oposición” se refieren únicamente al tratamiento de datos personales: solicitar que se eliminen cuando corresponda o pedir que no se usen para ciertos fines. No significan cancelar la compra del POS ni describen una suscripción.</p>
@@ -44,6 +45,21 @@ export default function LegalPage() {
           </LegalSection>
 
           <LegalSection id="cookies" title="Política de cookies">
+            {ANALYTICS_ENABLED ? <>
+            <p>El sitio de CodePOS MX usa Google Analytics 4 solo si lo aceptas en el aviso de cookies. Si lo rechazas o no eliges, la etiqueta de Analytics no se carga. Tu elección se guarda en la cookie técnica <code>codepos_cookie_notice</code>.</p>
+            <h3>Cookie técnica</h3>
+            <ul>
+              <li><code>codepos_cookie_notice</code>: recuerda si aceptaste o rechazaste la analítica. Dura hasta 180 días.</li>
+              <li>Protección: se limita al sitio con <code>SameSite=Lax</code> y, cuando se usa HTTPS, con el atributo <code>Secure</code>.</li>
+            </ul>
+            <h3>Cookies de analítica (solo con tu permiso)</h3>
+            <ul>
+              <li><code>_ga</code> y <code>_ga_*</code>: las configura Google Analytics para distinguir visitas y sesiones. Duran hasta 2 años.</li>
+              <li>Finalidad: medir cuántas personas visitan el sitio y qué páginas consultan, con estadísticas agregadas. Tenemos desactivadas las señales de Google y la personalización de anuncios.</li>
+              <li>Proveedor: Google LLC. Consulta <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">su política de privacidad</a>.</li>
+            </ul>
+            <p>No usamos cookies de publicidad. Puedes cambiar tu decisión cuando quieras con el botón de abajo o desde «Preferencias» en el pie de página; al rechazar, borramos las cookies <code>_ga</code> de este sitio. Los enlaces a servicios externos, como WhatsApp, pueden utilizar tecnologías propias que se rigen por las políticas de cada proveedor.</p>
+            </> : <>
             <p>El sitio de CodePOS MX no configura cookies de analítica, publicidad ni seguimiento. Al pulsar “Entendido” en el aviso, se guarda únicamente la cookie técnica <code>codepos_cookie_notice</code> para recordar que ya lo cerraste.</p>
             <ul>
               <li>Duración: hasta 180 días o hasta que la borres desde la configuración de tu navegador.</li>
@@ -51,7 +67,8 @@ export default function LegalPage() {
               <li>Protección: se limita al sitio con <code>SameSite=Lax</code> y, cuando se usa HTTPS, con el atributo <code>Secure</code>.</li>
             </ul>
             <p>Los enlaces a servicios externos, como WhatsApp, pueden utilizar tecnologías propias cuando los visitas; esas tecnologías se rigen por las políticas de cada proveedor. Puedes borrar la cookie técnica desde los ajustes del navegador. Si agregamos herramientas de analítica o publicidad en el futuro, actualizaremos esta política antes de activarlas.</p>
-            <button type="button" className="legal-secondary-button" onClick={() => window.dispatchEvent(new Event('codepos:open-cookie-notice'))}>Volver a mostrar el aviso de cookies</button>
+            </>}
+            <button type="button" className="legal-secondary-button" onClick={() => window.dispatchEvent(new Event('codepos:open-cookie-notice'))}>{ANALYTICS_ENABLED ? 'Cambiar mis preferencias de cookies' : 'Volver a mostrar el aviso de cookies'}</button>
           </LegalSection>
 
           <LegalSection id="terminos" title="Términos y condiciones">

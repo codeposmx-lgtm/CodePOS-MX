@@ -256,3 +256,25 @@ a { color: inherit; text-decoration: none; }
 .post-link:hover { color: #1878f9; text-decoration: underline; }
 .content-table-heading.pages-table, .content-table-row.pages-table { grid-template-columns: minmax(0,1fr) 90px; }
 .empty-chart { display: grid; place-items: center; padding-left: 0; color: #9aa5b5; font-size: 10px; }
+
+/* Tarjeta de Google Analytics 4 */
+.ga-card { display: grid; gap: 12px; margin-top: 14px; padding: 18px; }
+.ga-status { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: 0; }
+.ga-status div { padding: 9px 11px; border: 1px solid #edf1f6; border-radius: 8px; background: #f8fafd; }
+.ga-status dt { color: #8b97a9; font-size: 8px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; }
+.ga-status dd { margin: 3px 0 0; color: #1c2c46; font-size: 11px; font-weight: 700; }
+.ga-hint { margin: 0; color: #5d6d84; font-size: 10px; line-height: 1.55; }
+.ga-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ga-actions .analytics-button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.ga-disconnect { margin-left: auto; color: #c2415b; }
+.ga-pages { display: grid; gap: 5px; padding-top: 10px; border-top: 1px solid #edf1f6; font-size: 10px; }
+.ga-pages strong { color: #1c2c46; font-size: 10px; }
+.ga-pages div { display: flex; justify-content: space-between; gap: 10px; color: #5d6d84; }
+.ga-pages span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ga-pages b { color: #1c2c46; }
+@media (max-width: 760px) { .ga-card { padding: 14px; } .ga-disconnect { margin-left: 0; } }
+.meta-page-select { display: inline-flex; align-items: center; gap: 6px; color: #5d6d84; font-size: 10px; font-weight: 700; }
+.meta-page-select select { min-height: 39px; padding: 0 10px; border: 1px solid #e0e7f1; border-radius: 8px; color: #1c2c46; background: #fff; font: inherit; }
+.meta-warnings { color: #8a5a00; font-size: 10px; }
+.meta-warnings summary { cursor: pointer; font-weight: 700; }
+.meta-warnings ul { margin: 6px 0 0; padding-left: 18px; line-height: 1.55; }
